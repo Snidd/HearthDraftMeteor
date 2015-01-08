@@ -1,0 +1,32 @@
+<template name="home">
+    <h2>Not started</h2>
+    <ul class="list-group">
+        {{#each availableDrafts}}
+            <li class="list-group-item">
+                {{#linkTo route="draft.start" _id=_id}}
+                    {{totals}} cards - {{percent classchance}} - {{#each classes}}<b>{{this}}</b> {{/each}} <i>({{moment now}})</i>
+                {{/linkTo}}
+            </li>
+        {{/each}}
+    </ul>
+    <h2>In progress</h2>
+    <ul class="list-group">
+        {{#each draftsInProgress}}
+            <li class="list-group-item">
+                {{#linkTo route="draft" _id=_id}}
+                    {{totals}} cards - {{percent classchance}} - {{#each classes}}<b>{{this}}</b> {{/each}} <i>({{moment now}})</i>
+                {{/linkTo}}
+            </li>
+        {{/each}}
+    </ul>
+    <h2>Finished</h2>
+    <ul class="list-group">
+        {{#each finishedDrafts}}
+            <li class="list-group-item">
+                {{#linkTo route="draft.finished" _id=_id}}
+                    {{totals}} cards - {{percent classchance}} - {{#each classes}}<b>{{this}}</b> {{/each}} <i>({{moment now}})</i>
+                {{/linkTo}}
+            </li>
+        {{/each}}
+    </ul>
+</template>

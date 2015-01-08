@@ -1,0 +1,26 @@
+<template name="draft">
+    {{#each availablePicks}}
+        <div class="imagecontainer">
+            <img class="{{cardClass this}} card" src="http://hearth.cards/images/{{img}}"/>
+            {{#if isSelected this}}
+                <div class="buttonover">
+                    <button type="button" class="btn pickcard btn-success btn-lg"><i class="fa fa-check"></i> Pick</button>
+                </div>
+            {{/if}}
+        </div>
+    {{/each}}
+    {{#if hasPicks}}
+        <div id="picks">
+            {{#each picks}}
+            <div class="deck screenshot">
+                <div class="pull-left deck-caption">
+                    <div class="deck-cost">{{mana}}</div>
+                    <div style="float:left;padding: 4px">{{name}}{{#if moreThenOne this}} x {{count}}{{/if}}</div>
+                </div>
+                <div class="pull-right deck-pic" style="background: url('http://hearth.cards/images/{{img}}'); background-repeat: no-repeat; background-position: -55px -54px; background-size: 200px 272px;">
+                    <div class="deck-fade"></div></div><div style="clear:both;"></div>
+            </div>
+            {{/each}}
+        </div>
+    {{/if}}
+</template>

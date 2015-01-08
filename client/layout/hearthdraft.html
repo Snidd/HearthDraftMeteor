@@ -1,0 +1,31 @@
+<head>
+    <title>hearthdraft</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<template name="AppLayout">
+  <body>
+  <div class="navbar navbar-default" role="navigation">
+      <div class="navbar-header">
+          <a class="navbar-brand" href="/">Hearthstone Draft</a>
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </button>
+      </div>
+      <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+              <li class="active"><a href="{{pathFor route='draft.create'}}">Create draft</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            {{> loginButtons}} <!-- here -->
+          </ul>
+      </div>
+  </div>
+  <div id="main" class="container-fluid">
+    {{> yield}}
+  </div>
+  </body>
+</template>

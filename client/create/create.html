@@ -1,0 +1,23 @@
+<template name="create">
+    <form id="createdraft">
+        <div class="form-group">
+            <p><label>Classes</label></p>
+            {{#each classes}}
+            <button type="button" class="btn classbtn {{addedClass this}}"><i class="fa {{addedIcon this}}"></i> {{this}}</button>
+            {{/each}}
+        </div>
+        <div class="form-group">
+            <label for="totals">Total cards</label>
+            <input type="number" class="form-control" id="totals" placeholder="{{totals}}" name="totals">
+        </div>
+        <div class="form-group">
+            <label for="classchance">Class card percentage</label>
+            <input type="number" class="form-control" id="classchance" placeholder="{{classchance}}" name="classchance">
+        </div>
+        <div class="form-group">
+            <label for="boosters">Boostercount</label>
+            <input type="number" class="form-control" id="boosters" placeholder="{{boosters}}" name="boosters">
+        </div>
+        <button type="submit" class="btn btn-default">Create</button>
+    </form>
+</template>

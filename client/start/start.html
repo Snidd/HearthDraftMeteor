@@ -1,0 +1,15 @@
+<template name="start">
+    {{#if loggedIn}}
+      {{#if imNotInDraft members}}
+          <button type="button" class="btn join btn-primary"><i class="fa fa-plus"></i> Join draft</button>
+      {{else}}
+          <button type="button" class="btn start btn-primary"><i class="fa fa-play"></i> Start draft!</button>
+      {{/if}}
+    {{/if}}
+    <h3>Draft members</h3>
+    <ul class="list-group">
+        {{#each members}}
+            <li class="list-group-item">{{email}}</li>
+        {{/each}}
+    </ul>
+</template>
