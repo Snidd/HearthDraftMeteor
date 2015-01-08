@@ -2,15 +2,22 @@ Meteor.methods({
     "generateBoosters": function (draftId, cleanDraft) {
         createBoosters(draftId, cleanDraft);
     },
-    "nextPick": function (draftId) {
+    "makePick": function (card, draftId) {
+
+        var booster = Boosters.findOne({ draftId: draftId, ownerId: Meteor.userId() });
+        Boosters.update({ _id: booster._id }, { $set: { picked: card } });
 
         var draft = Drafts.findOne({ _id: draftId });
 
         if (!draft) { return; }
 
+        Drafts.update({ _id: draftId }, { $push: { picked: Meteor.userId() } });
+
         var members = draft.members;
 
         var allPicked = true, i;
+
+        var picked = [];
 
         for (i=0;i<members.length;i++) {
             var member = members[i];
@@ -18,6 +25,8 @@ Meteor.methods({
             if (booster.picked === undefined) {
                 allPicked = false;
                 break;
+            } else {
+                picked.push(member);
             }
         }
 
@@ -63,6 +72,8 @@ Meteor.methods({
             Boosters.update({_id: booster._id}, {$set: {ownerId: nextOwnerId}});
 
         }
+
+        Drafts.update({ _id: draftId }, { $set: { picked: [] } });
 
         console.log("Cards left:" + cardsLeft);
 
@@ -217,7 +228,7 @@ var getCardCount = function (totalCards, percentChance) {
     var decimal = cardCount % 1;
     var rand = Math.random();
     cardCount = Math.floor(cardCount);
-    if (rand > decimal) {
+    if (rand < decimal) {
         cardCount++;
     }
 

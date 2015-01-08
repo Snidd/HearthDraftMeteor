@@ -5,6 +5,12 @@ Template.draft.helpers({
             return booster.cards;
         }
     },
+    playersRemaining: function () {
+        var draft = Drafts.findOne({ _id: Session.get("currentDraftId")});
+        if (!draft) { return; }
+        var remaining = draft.members.length - draft.picked.length;
+        return remaining + " player(s) not picked...";
+    },
     cardClass: function (card) {
         var booster = getCurrentBooster();
         if (booster === undefined) {
@@ -91,9 +97,6 @@ Template.draft.events({
    },
     "click .pickcard": function () {
 
-        var booster = Boosters.findOne({ draftId: Session.get("currentDraftId"), ownerId: Meteor.userId() });
-        Boosters.update({ _id: booster._id }, { $set: { picked: this } });
-
         Session.set("selectedCard", undefined);
 
         var picks = Picks.findOne({ ownerId: Meteor.userId(), draftId: Session.get("currentDraftId") });
@@ -103,6 +106,6 @@ Template.draft.events({
             Picks.insert({ ownerId: Meteor.userId(), draftId: Session.get("currentDraftId"), picks: [ this ] });
         }
 
-        Meteor.call("nextPick", Session.get("currentDraftId"));
+        Meteor.call("makePick", this, Session.get("currentDraftId"));
     }
 });

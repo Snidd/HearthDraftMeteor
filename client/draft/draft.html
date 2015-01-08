@@ -9,18 +9,21 @@
             {{/if}}
         </div>
     {{/each}}
-    {{#if hasPicks}}
-        <div id="picks">
-            {{#each picks}}
-            <div class="deck screenshot">
-                <div class="pull-left deck-caption">
-                    <div class="deck-cost">{{mana}}</div>
-                    <div style="float:left;padding: 4px">{{name}}{{#if moreThenOne this}} x {{count}}{{/if}}</div>
-                </div>
-                <div class="pull-right deck-pic" style="background: url('http://hearth.cards/images/{{img}}'); background-repeat: no-repeat; background-position: -55px -54px; background-size: 200px 272px;">
-                    <div class="deck-fade"></div></div><div style="clear:both;"></div>
+
+    <div id="picks">
+        <p class="remaining">{{playersRemaining}}</p>
+
+        {{#if hasPicks}}
+        {{#each picks}}
+        <div class="deck screenshot">
+            <div class="pull-left deck-caption">
+                <div class="deck-cost">{{mana}}</div>
+                <div style="float:left;padding: 4px">{{name}}{{#if moreThenOne this}} x {{count}}{{/if}}</div>
             </div>
-            {{/each}}
+            <div class="pull-right deck-pic" style="background: url('http://hearth.cards/images/{{img}}'); background-repeat: no-repeat; background-position: -55px -54px; background-size: 200px 272px;">
+                <div class="deck-fade"></div></div><div style="clear:both;"></div>
         </div>
-    {{/if}}
+        {{/each}}
+        {{/if}}
+    </div>
 </template>

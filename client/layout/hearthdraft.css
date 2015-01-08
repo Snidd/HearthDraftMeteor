@@ -19,6 +19,10 @@ img.selected {
     z-index: 2;
 }
 
+.remaining {
+    font-style: italic;
+}
+
 .buttonover {
     position: absolute;
     left: 96px;

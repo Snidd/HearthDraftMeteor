@@ -106,7 +106,7 @@ var startDraft = function (draftId, callback) {
 
     shuffle(mbrs);
 
-    Drafts.update({ "_id": draftId },{ $set: { currentBooster: 0, members: mbrs, started: true, finished: false } });
+    Drafts.update({ "_id": draftId },{ $set: { currentBooster: 0, picked: [],  members: mbrs, started: true, finished: false } });
 
     Meteor.call("generateBoosters", draftId, true);
 
