@@ -3,6 +3,38 @@ img.selected {
     z-index: 10;
     opacity: 0.6;
 }
+
+.deck.screenshot.class-Shaman {
+    background-color: rgb(62, 65, 239);
+}
+
+.deck.screenshot.class-Paladin {
+    background-color: rgb(239, 236, 60);
+}
+
+.deck.screenshot.class-Rogue {
+    background-color: rgb(80, 76, 78);
+}
+
+.deck.screenshot.class-Warrior {
+    background-color: rgb(140, 12, 20);
+}
+.deck.screenshot.class-Hunter {
+    background-color: rgb(33, 140, 52);
+}
+.deck.screenshot.class-Druid {
+    background-color: rgb(140, 70, 40);
+}
+.deck.screenshot.class-Warlock {
+    background-color: rgb(106, 39, 140);
+}
+.deck.screenshot.class-Mage {
+    background-color: rgb(0, 153, 198);
+}
+.deck.screenshot.class-Priest {
+    background-color: rgb(200, 199, 196);
+}
+
 .imagecontainer {
     width: 288px;
     height: 397px;

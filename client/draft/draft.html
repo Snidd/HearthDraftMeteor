@@ -15,7 +15,7 @@
 
         {{#if hasPicks}}
         {{#each picks}}
-        <div class="deck screenshot">
+        <div class="deck screenshot class-{{class}}">
             <div class="pull-left deck-caption">
                 <div class="deck-cost">{{mana}}</div>
                 <div style="float:left;padding: 4px">{{name}}{{#if moreThenOne this}} x {{count}}{{/if}}</div>

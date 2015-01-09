@@ -5,7 +5,18 @@ Meteor.methods({
     "makePick": function (card, draftId) {
 
         var booster = Boosters.findOne({ draftId: draftId, ownerId: Meteor.userId() });
+        if (booster.picked !== undefined) {
+            throw new Meteor.Error("You have already picked!");
+        }
+
         Boosters.update({ _id: booster._id }, { $set: { picked: card } });
+
+        var picks = Picks.findOne({ ownerId: Meteor.userId(), draftId: draftId });
+        if (picks) {
+            Picks.update({ _id: picks._id }, { $push: { picks: card }});
+        } else {
+            Picks.insert({ ownerId: Meteor.userId(), draftId: draftId, picks: [ card ] });
+        }
 
         var draft = Drafts.findOne({ _id: draftId });
 
@@ -111,15 +122,45 @@ var createBoosters = function (draftId, cleanDraft) {
     }
 };
 
-var generateNewBooster = function (totalCards, classCardPercentage, classes) {
+this.generateMultipleBoosters = function (totalBoosters, classPercentage) {
+    var cards = 15;
+    var classes = ["Warrior"];
 
-    var totalCards;
+    var totalClasscards = 0;
+    var totalNeutrals = 0;
+
+    for (var i=0;i<totalBoosters;i++) {
+        var booster = generateNewBooster(cards, classPercentage, classes);
+        for (var y=0;y<booster.length;y++) {
+            var card = booster[y];
+            if (card.class === "Warrior") {
+                totalClasscards++;
+            } else {
+                totalNeutrals++;
+            }
+        }
+    }
+
+    var tots = totalClasscards + totalNeutrals;
+
+    console.log("Total cards: " + tots);
+    console.log("Classcards:" + totalClasscards);
+    console.log("Neutrals:" + totalNeutrals);
+    console.log("ClassPercent:" + ((totalClasscards / tots)*100));
+    console.log("Classcards per booster:" + totalClasscards/totalBoosters);
+};
+
+var generateNewBooster = function (totalCards, classCardPercentage, classes) {
 
     var commonsClasses = Cards.find({ draftable: true, rarity: { $in: [ "Common", "Free" ] } , class: { $in: classes } }).fetch();
     var raresClasses = Cards.find({ draftable: true, rarity: "Rare", class: { $in: classes } }).fetch();
     var epicsClasses = Cards.find({ draftable: true, rarity: "Epic", class: { $in: classes } }).fetch();
 
-    classes.push(undefined);
+    var classesAndNeutrals = classes.slice();
+    classesAndNeutrals.push(undefined);
+
+
+    //classes.push(undefined);
 
     var commons = Cards.find({ draftable: true, rarity: { $in: [ "Common", "Free" ] } , class: undefined }).fetch();
     var rares = Cards.find({ draftable: true, rarity: "Rare", class: undefined }).fetch();
@@ -148,7 +189,8 @@ var generateNewBooster = function (totalCards, classCardPercentage, classes) {
     }
 
     for (i=0;i<epicCount;i++) {
-        rand = Math.random();
+        rand = Random.fraction();
+        //console.log("Epic, Chance: " + classCardPercentage + " (Roll was:" + rand + ")");
         if (rand < classCardPercentage) {
             card = getCard(epicsClasses, cardIdsAdded);
         } else {
@@ -164,7 +206,8 @@ var generateNewBooster = function (totalCards, classCardPercentage, classes) {
     }
 
     for (i=0;i<rareCount;i++) {
-        rand = Math.random();
+        rand = Random.fraction();
+        //console.log("Rare, Chance: " + classCardPercentage + " (Roll was:" + rand + ") Add classcard? " + (rand < classCardPercentage));
         if (rand < classCardPercentage) {
             card = getCard(raresClasses, cardIdsAdded);
         } else {
@@ -181,7 +224,8 @@ var generateNewBooster = function (totalCards, classCardPercentage, classes) {
     }
 
     for (i=0;i<commonCount;i++) {
-        rand = Math.random();
+        rand = Random.fraction();
+        //console.log("Common, Chance: " + classCardPercentage + " (Roll was:" + rand + ") Add classcard? " + (rand < classCardPercentage));
         if (rand < classCardPercentage) {
             card = getCard(commonsClasses, cardIdsAdded);
         } else {
@@ -226,7 +270,7 @@ var idInArray = function (cardId, idArray) {
 var getCardCount = function (totalCards, percentChance) {
     var cardCount = totalCards * percentChance;
     var decimal = cardCount % 1;
-    var rand = Math.random();
+    var rand = Random.fraction();
     cardCount = Math.floor(cardCount);
     if (rand < decimal) {
         cardCount++;
@@ -237,5 +281,5 @@ var getCardCount = function (totalCards, percentChance) {
 
 var getRandomNumber = function (min,max)
 {
-    return Math.floor(Math.random()*(max-min+1)+min);
+    return Math.floor(Random.fraction()*(max-min+1)+min);
 };

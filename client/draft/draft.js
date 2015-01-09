@@ -7,9 +7,10 @@ Template.draft.helpers({
     },
     playersRemaining: function () {
         var draft = Drafts.findOne({ _id: Session.get("currentDraftId")});
-        if (!draft) { return; }
+        if (!draft || !draft.members || !draft.picked) { return; }
         var remaining = draft.members.length - draft.picked.length;
         return remaining + " player(s) not picked...";
+
     },
     cardClass: function (card) {
         var booster = getCurrentBooster();
@@ -58,12 +59,25 @@ Template.draft.helpers({
 
         if (picks) {
             picks.sort(function (a,b) {
-                if (a.mana === b.mana) {
-                    if(a.name < b.name) return -1;
-                    if(a.name > b.name) return 1;
+                if (a.class === undefined) {
+                    a.class = "ANeutral;"
+                }
+                if (b.class === undefined) {
+                    b.class = "ANeutral;"
+                }
+                if (a.class === b.class) {
+                    if (a.mana === b.mana) {
+                        if(a.name < b.name) return -1;
+                        if(a.name > b.name) return 1;
+                        return 0;
+                    }
+                    return Number(a.mana) - Number(b.mana);
+                } else {
+                    if (a.class < b.class) return -1;
+                    if (a.class > b.class) return 1;
                     return 0;
                 }
-                return Number(a.mana) - Number(b.mana);
+
             });
         }
         return picks;
@@ -98,13 +112,6 @@ Template.draft.events({
     "click .pickcard": function () {
 
         Session.set("selectedCard", undefined);
-
-        var picks = Picks.findOne({ ownerId: Meteor.userId(), draftId: Session.get("currentDraftId") });
-        if (picks) {
-            Picks.update({ _id: picks._id }, { $push: { picks: this }});
-        } else {
-            Picks.insert({ ownerId: Meteor.userId(), draftId: Session.get("currentDraftId"), picks: [ this ] });
-        }
 
         Meteor.call("makePick", this, Session.get("currentDraftId"));
     }
